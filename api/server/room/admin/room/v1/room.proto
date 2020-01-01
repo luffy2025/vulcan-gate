@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package room.admin.room.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "api/server/room/admin/room/v1;adminv1";
+
+// Room admin service
+// Open to the server cluster
+// Provide HTTP and gRPC interfaces
+service RoomAdmin {
+	rpc GetById (GetByIdRequest) returns (GetByIdResponse) {
+		option (google.api.http) = {
+			get: "/admin/room/id"
+		};
+	};
+}
+
+message GetByIdRequest {
+	int64 id = 1;
+}
+
+message GetByIdResponse {
+	int32 code = 1;
+	string message = 2;
+
+	RoomProto item = 3;
+}
+
+message RoomProto {
+	int64 id = 1;
+	string name = 2;
+	int64 created_at = 3;
+}

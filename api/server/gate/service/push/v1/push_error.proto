@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package gate.service.push.v1;
+
+import "errors/errors.proto";
+
+option go_package = "api/server/gate/service/push/v1;servicev1";
+
+enum PushServiceErrorReason {
+  option (errors.default_code) = 500;
+
+  PUSH_SERVICE_ERROR_REASON_UNSPECIFIED = 0 [(errors.code) = 500];
+  PUSH_SERVICE_ERROR_REASON_SERVER = 1 [(errors.code) = 500];
+  PUSH_SERVICE_ERROR_REASON_SERVER_ID = 2 [(errors.code) = 401];
+}

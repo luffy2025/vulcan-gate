@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package player.admin.user.v1;
+
+import "errors/errors.proto";
+
+option go_package = "api/server/player/admin/user/v1;adminv1";
+
+enum UserAdminErrorReason {
+  option (errors.default_code) = 500;
+
+  USER_ADMIN_ERROR_REASON_UNSPECIFIED = 0 [(errors.code) = 500];
+  USER_ADMIN_ERROR_REASON_SERVER = 1 [(errors.code) = 500];
+  USER_ADMIN_ERROR_REASON_ID = 2 [(errors.code) = 401];
+}

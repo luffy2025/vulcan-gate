@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package player.admin.storage.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "api/server/player/admin/storage/v1;adminv1";
+
+// Storage admin service
+// Open to the server cluster
+// Provide HTTP and gRPC interfaces
+service StorageAdmin {
+  rpc AddItem (AddItemRequest) returns (AddItemResponse) {
+    option (google.api.http) = {
+      post: "/admin/storage/item/add"
+      body: "*"
+    };
+  };
+}
+
+message AddItemRequest {
+  int64 id = 1;
+  map<int64, uint64> items = 2; // item_id -> amount_to_add
+}
+
+message AddItemResponse {
+  int32 code = 1;
+  string message = 2;
+
+  map<int64, uint64> items = 3; // item_id -> current_amount
+}
+
+
+// Item source
+enum ItemSource {
+  ITEM_SOURCE_UNSPECIFIED = 0; // Default source
+}

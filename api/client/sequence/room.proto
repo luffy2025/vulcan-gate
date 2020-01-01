@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package sequence;
+
+option go_package = "api/client/sequence;cliseq";
+
+// Room module operation number
+enum RoomSeq {
+	RoomUnknown = 0;
+
+	// Room list
+	RoomList = 1;
+
+	// Room detail	
+	RoomDetail = 2;
+
+	// Create room
+	CreateRoom = 3;
+
+	// Invite to join room
+	InviteToJoinRoom = 4;
+
+	// Agree to invite to join room
+	AgreeToInviteJoinRoom = 5;	
+
+	// Request to join room
+	RequestToJoinRoom = 6;
+
+	// Approve request to join room
+	ApproveRequestToJoinRoom = 7;
+
+	// Push: joined room
+	PushJoinedRoom = 8;	
+
+	// Kick user from room
+	KickUserFromRoom = 9;
+
+	// Close room
+	CloseRoom = 10;
+
+	// Leave room
+	LeaveRoom = 11;
+
+	// Push: Removed from room. Leave, be kicked or room closed
+	PushRemovedFromRoom = 12;
+}

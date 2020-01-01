@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package room.intra.v1;
+
+import "errors/errors.proto";
+
+option go_package = "api/server/room/intra/v1;intrav1";
+
+enum TunnelServiceErrorReason {
+  option (errors.default_code) = 500;
+
+  TUNNEL_SERVICE_ERROR_REASON_UNSPECIFIED = 0 [(errors.code) = 500];
+  TUNNEL_SERVICE_ERROR_REASON_SERVER = 1 [(errors.code) = 500];
+  TUNNEL_SERVICE_ERROR_REASON_UID = 2 [(errors.code) = 401];
+}

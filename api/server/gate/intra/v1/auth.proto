@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package gate.intra.v1;
+
+option go_package = "api/server/gate/intra/v1;intrav1";
+
+// only for server use
+// The client will receive []byte(AuthToken) data from the /login interface of the Account service, and then carry it in the handshake message
+message AuthToken {
+  int32 location = 1; // Location
+  int64 account_id = 2; // Account ID
+  string rand = 3; // random string for replay attack prevention
+  int64 timeout = 4; // timeout (unix timestamp)
+  bool unencrypted = 5; // Whether the token is unencrypted, default is false
+  string color = 6; // Color for route distribution
+  OnlineStatus status = 7; // Online status
+}
+
+enum OnlineStatus {
+  ONLINE_STATUS_UNSPECIFIED = 0; // Unspecified
+  ONLINE_STATUS_GATE = 1; // Request from Gate service, usually initiated by users
+  ONLINE_STATUS_ADMIN = 2; // Request from Admin service, usually initiated by internal GM
+  ONLINE_STATUS_DEV = 3; // Developer test use
+  ONLINE_STATUS_SVC = 4; // Request from other services, usually initiated by internal services
+}

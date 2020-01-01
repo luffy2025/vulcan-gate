@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package player.admin.gamedata.v1;
+
+option go_package = "api/server/player/admin/gamedata/v1;adminv1";
+
+import "google/api/annotations.proto";
+
+
+// Gamedata admin service
+// Open to the server cluster
+// Provide HTTP and gRPC interfaces
+service GamedataAdmin {
+  // Query all configuration items
+  rpc GetItemList (GetItemListRequest) returns (GetItemListResponse) {
+    option (google.api.http) = {
+      get: "/admin/gamedata/item/list"
+    };
+  };
+}
+
+message GetItemListRequest {
+}
+
+message GetItemListResponse {
+  int32 code = 1;
+  string message = 2;
+
+  repeated ItemDataProto items = 3;
+}
+
+message ItemDataProto {
+  int64 id = 1;
+  string name = 2;
+  int64 type = 3;
+  int64 type_value = 4;
+}

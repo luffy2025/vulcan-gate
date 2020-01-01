@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package sequence;
+
+option go_package = "api/client/sequence;cliseq";
+
+// Dev module operation number
+enum DevSeq {
+	DevUnknown = 0;
+
+	// Dev command list
+	DevList = 1;
+	
+	// Execute Dev command
+	DevExec = 2;
+}

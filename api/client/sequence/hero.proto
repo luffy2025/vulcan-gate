@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package sequence;
+
+option go_package = "api/client/sequence;cliseq";
+
+// Hero module operation number
+enum HeroSeq {
+  HeroUnknown = 0;
+
+  // Push Hero unlock
+  PushHeroUnlock = 1;
+
+  // Hero level upgrade
+  HeroLevelUpgrade = 2;
+
+}

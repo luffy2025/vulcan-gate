@@ -1,0 +1,313 @@
+syntax = "proto3";
+
+package message;
+
+import "google/api/annotations.proto";
+import "message/user_basic.proto";
+
+option go_package = "api/client/message;climsg";
+
+
+// ---------- Data structures ----------
+
+message UserRoomProto {
+  int64 room_id = 1; // Room ID
+}
+
+// Room data
+message RoomProto {
+  RoomBasicProto basic = 1; // Room basic data
+  map<int64, RoomMemberProto> members = 2; // user ID -> room member data
+  repeated int64 invitees = 3; // Invitees
+  repeated int64 requests = 4; // Requests
+}
+
+// Room basic data
+message RoomBasicProto {
+  int64 id = 1; // Room ID
+  uint64 room_type = 2; // room type
+  UserBasicProto creator = 3; // Creator
+  int64 created_at = 4; // Created at
+}
+
+// Room member
+message RoomMemberProto {
+  UserBasicProto user = 1; // User basic data
+  int64 joined_at = 2; // Joined at
+}
+
+// ---------- Service ----------
+
+// Room service
+service RoomTCPService {
+  // Room List
+  rpc RoomList (CSRoomList) returns (SCRoomList) {
+    option (google.api.http) = {
+      post: "/room/list"
+      body: "*"
+    };
+  };
+
+  // Room detail
+  rpc RoomDetail (CSRoomDetail) returns (SCRoomDetail) {
+    option (google.api.http) = {
+      post: "/room/detail"
+      body: "*"
+    };
+  };
+
+  // Create room
+  rpc CreateRoom (CSCreateRoom) returns (SCCreateRoom) {
+    option (google.api.http) = {
+      post: "/room/create"
+      body: "*"
+    };
+  };
+
+  // Invite to join room
+  rpc InviteToJoinRoom (CSInviteToJoinRoom) returns (SCInviteToJoinRoom) {
+    option (google.api.http) = {
+      post: "/room/invite_to_join"
+      body: "*"
+    };
+  };
+
+  // Agree to invite to join room
+  rpc AgreeToInviteJoinRoom (CSAgreeToInviteJoinRoom) returns (SCAgreeToInviteJoinRoom) {
+    option (google.api.http) = {
+      post: "/room/agree_to_invite_join"
+      body: "*"
+    };
+  };
+
+  // Request to join room
+  rpc RequestToJoinRoom (CSRequestToJoinRoom) returns (SCRequestToJoinRoom) {
+    option (google.api.http) = {
+      post: "/room/request_to_join"
+      body: "*"
+    };
+  };
+
+  // Approve request to join room
+  rpc ApproveRequestToJoinRoom (CSApproveRequestToJoinRoom) returns (SCApproveRequestToJoinRoom) {
+    option (google.api.http) = {
+      post: "/room/approve_request_to_join"
+      body: "*"
+    };
+  };
+
+  // Kick user from room
+  rpc KickUserFromRoom (CSKickUserFromRoom) returns (SCKickUserFromRoom) {
+    option (google.api.http) = {
+      post: "/room/kick_user"
+      body: "*"
+    };
+  };
+
+  // Leave room
+  rpc LeaveRoom (CSLeaveRoom) returns (SCLeaveRoom) {
+    option (google.api.http) = {
+      post: "/room/leave"
+      body: "*"
+    };
+  };
+
+  // Close room
+  rpc CloseRoom (CSCloseRoom) returns (SCCloseRoom) {
+    option (google.api.http) = {
+      post: "/room/close"
+      body: "*"
+    };
+  };
+}
+
+// ---------- Push messages ----------
+
+// Push: Joined room
+message SCPushJoinedRoom {
+  int64 room_id = 1; // Room ID
+  RoomMemberProto member = 2; // Room member data
+}
+
+// Push: Removed from room. Leave, be kicked or room closed
+message SCPushRemovedFromRoom {
+  int64 room_id = 1; // Room ID
+  RoomMemberProto member = 2; // Room member data
+}
+
+// ---------- Request Response messages ----------
+
+// Request: Room List
+message CSRoomList {
+  int64 page = 1; // Page number
+  int64 page_size = 2; // Page size
+}
+
+// Response: Room List
+message SCRoomList {
+  Code code = 1; // Status code
+  enum Code {
+    ErrServer = 0; // Please try again later
+    Success = 1; // Success
+  }
+
+  repeated RoomBasicProto rooms = 2; // Room basic data list
+}
+
+// Request: Room detail
+message CSRoomDetail {
+  int64 room_id = 1; // Room ID
+}
+
+// Response: Room detail
+message SCRoomDetail {  
+  Code code = 1; // Status code
+  enum Code {
+    ErrServer = 0; // Please try again later
+    Success = 1; // Success
+    ErrRoomNotFound = 2; // Room not found
+  }
+
+  RoomProto room = 2; // Room data
+}
+// Request: Create room
+message CSCreateRoom {
+  uint64 room_type = 1; // Room type
+}
+
+// Response: Create room
+message SCCreateRoom {
+  Code code = 1; // Status code
+  enum Code {
+    ErrServer = 0; // Please try again later
+    Success = 1; // Success
+    ErrRoomTypeInvalid = 2; // Room type invalid
+    ErrAlreadyInRoom = 3; // Already in room
+  }
+
+  RoomProto room = 2; // Room data
+}
+
+// Request: Invite to join room
+message CSInviteToJoinRoom {
+  int64 user_id = 1; // User ID
+}
+
+// Response: Invite to join room
+message SCInviteToJoinRoom {
+  Code code = 1; // Status code
+  enum Code {
+    ErrServer = 0; // Please try again later
+    Success = 1; // Success
+    ErrNotInRoom = 2; // Not in room
+    ErrUnauthorized = 3; // Unauthorized
+    ErrUserNotFound = 4; // User not found
+    ErrUserAlreadyInRoom = 5; // User already in room
+    ErrUserAlreadyInvited = 6; // User already invited
+  }
+}
+
+// Request: Agree to invite to join room
+message CSAgreeToInviteJoinRoom {
+  int64 room_id = 1; // Room ID
+}
+
+// Response: Agree to invite to join room
+message SCAgreeToInviteJoinRoom {
+  Code code = 1; // Status code
+  enum Code {
+    ErrServer = 0; // Please try again later
+    Success = 1; // Success
+    ErrNotInRoom = 2; // Not in room
+    ErrUnauthorized = 3; // Unauthorized
+    ErrUserNotFound = 4; // User not found
+    ErrUserAlreadyInRoom = 5; // User already in room
+    ErrUserNotInvited = 6; // User not invited
+  }
+} 
+
+// Request: Request to join room
+message CSRequestToJoinRoom {
+  int64 room_id = 1; // Room ID
+} 
+
+// Response: Request to join room
+message SCRequestToJoinRoom {
+  Code code = 1; // Status code
+  enum Code {
+    ErrServer = 0; // Please try again later
+    Success = 1; // Success
+    ErrAlreadyInRoom = 2; // Already in room
+    ErrRoomNotFound = 3; // Room not found
+    ErrAlreadyRequested = 4; // Already requested
+  }
+}
+
+// Request: Approve request to join room
+message CSApproveRequestToJoinRoom {
+  int64 user_id = 1; // User ID
+}
+
+// Response: Approve request to join room
+message SCApproveRequestToJoinRoom {
+  Code code = 1; // Status code
+  enum Code {
+    ErrServer = 0; // Please try again later
+    Success = 1; // Success
+    ErrNotInRoom = 2; // Not in room
+    ErrUnauthorized = 3; // Unauthorized
+    ErrUserNotFound = 4; // User not found
+    ErrUserAlreadyInRoom = 5; // User already in room
+    ErrUserNotRequested = 6; // User not requested
+  }
+}
+
+// Request: Kick user from room
+message CSKickUserFromRoom {
+  int64 user_id = 1; // User ID
+}
+
+// Response: Kick user from room
+message SCKickUserFromRoom {
+  Code code = 1; // Status code
+  enum Code {
+    ErrServer = 0; // Please try again later  
+    Success = 1; // Success
+    ErrNotInRoom = 2; // Not in room
+    ErrUnauthorized = 3; // Unauthorized
+    ErrUserNotFound = 4; // User not found
+    ErrUserNotInRoom = 5; // User not in room
+  }
+}
+
+// Request: Leave room
+message CSLeaveRoom {
+  int64 room_id = 1; // Room ID
+}
+
+// Response: Leave room
+message SCLeaveRoom {
+  Code code = 1; // Status code
+  enum Code {
+    ErrServer = 0; // Please try again later  
+    Success = 1; // Success
+    ErrNotInRoom = 2; // Not in room
+    ErrIsCreator = 3; // Is creator
+  }
+}
+
+// Request: Close room
+message CSCloseRoom {
+  int64 room_id = 1; // Room ID
+}
+
+// Response: Close room
+message SCCloseRoom {
+  Code code = 1; // Status code
+  enum Code {
+    ErrServer = 0; // Please try again later  
+    Success = 1; // Success
+    ErrNotInRoom = 2; // Not in room
+    ErrUnauthorized = 3; // Unauthorized
+  }
+}

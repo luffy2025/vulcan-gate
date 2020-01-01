@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package message;
+
+import "google/api/annotations.proto";
+
+option go_package = "api/client/message;climsg";
+
+// Development debugging command protocol
+service DevTCPService {
+	// Dev command list
+	rpc DevList (CSDevList) returns (SCDevList) {
+		option (google.api.http) = {
+			post: "/dev/list"
+			body: "*"
+		};
+	};
+	// Execute Dev command
+	rpc DevExecute (CSDevExecute) returns (SCDevExecute) {
+		option (google.api.http) = {
+			post: "/dev/execute"
+			body: "*"
+		};
+	};
+
+}
+
+// ---------- Request Response Message Bodies ----------
+
+// Request: Dev command list
+message CSDevList {
+}
+
+// Response: Dev command list
+message SCDevList {
+	Code code = 1;
+	enum Code {
+		ErrServer = 0; // Please try again later
+		Success = 1; // Success
+	}
+
+	repeated DevCmdProto commands = 2; // Dev command list
+}
+
+
+// Request: Execute Dev command
+message CSDevExecute {
+	string mod = 1; // Command module
+	string cmd = 2; // Command name
+	map<string, string> str_args = 4; // Parameters map<DevCmdArgProto.key, string>
+}
+
+// Response: Execute Dev command
+message SCDevExecute {
+	Code code = 1;
+	enum Code {
+		ErrServer = 0; // Please try again later
+		Success = 1; // Success
+		ErrModNotExist = 2; // Command module does not exist
+		ErrNameNotExist = 3; // Command name does not exist
+		ErrArgNotExist = 4; // Parameter does not exist
+		ErrArgIllegal = 5; // Parameter error
+		ErrArgFormat = 6; // Parameter format error
+	}
+
+	string message = 2; // Result information, JSON format
+}
+
+// ---------- Data Structures ----------
+
+// A Dev command
+message DevCmdProto {
+	string mod = 1; // Command module
+	string name = 2; // Command name
+	string desc = 3; // Description
+
+	repeated DevCmdArgProto args = 4; // All parameters
+}
+
+// A parameter of Dev command
+message DevCmdArgProto {
+	string key = 1; // Parameter name
+	string def = 2; // Default value
+}

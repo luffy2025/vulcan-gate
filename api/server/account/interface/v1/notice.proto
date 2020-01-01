@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package account.interface.v1;
+
+option go_package = "api/server/account/interface/v1;interfacev1";
+
+import "google/api/annotations.proto";
+
+// Notice Service
+// Open to the public network
+// Provide HTTP and gRPC interfaces
+service NoticeInterface {
+  // Notice List
+  rpc NoticeList (NoticeListRequest) returns (NoticeListResponse) {
+    option (google.api.http) = {
+      get: "/v1/notice/list"
+    };
+  }
+}
+
+message NoticeListRequest {
+}
+
+message NoticeListResponse {
+  Code code = 1; // Response code
+  enum Code {
+    CODE_ERR_UNSPECIFIED = 0; // Please try again later
+    CODE_SUCCESS = 1; // Success
+  }
+  repeated Notice list = 2; // Notice list, up to 10 items
+}
+
+// Notice
+message Notice {
+  string title = 1; // Title
+  string content = 2; // Content
+}

@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package message;
+
+import "google/api/annotations.proto";
+
+
+option go_package = "api/client/message;climsg";
+
+// Hero service
+service HeroTCPService {
+
+  // Hero level upgrade
+  rpc HeroLevelUpgrade (CSHeroLevelUpgrade) returns (SCHeroLevelUpgrade) {
+    option (google.api.http) = {
+      post: "/hero/level/upgrade"
+      body: "*"
+    };
+  };
+}
+
+// ---------------- Push messages --------------
+
+// Push: New Hero unlocked
+message SCPushHeroUnlock {
+  repeated HeroProto heroes = 1;
+}
+
+// ---------------- Request Response messages --------------
+
+// Request: Hero level upgrade
+message CSHeroLevelUpgrade {
+  int64 hero_id = 1; // Hero_id
+}
+
+// Response: Hero level upgrade
+message SCHeroLevelUpgrade {
+  Code code = 1; // Status code
+  enum Code {
+    ErrServer = 0; // Please try again later
+    Success = 1; // Success
+    ErrRoleNotExist = 2; // Hero does not exist
+    ErrMaxLevel = 3; // Already max level
+    ErrCostNotEnough = 4; // Cost not enough
+  }
+  HeroProto hero = 2; // Hero information
+  map<int64, uint64> new_amounts = 3; // New amounts of items after consumption<item config ID, amount>
+}
+
+// ---------------- Data structures --------------
+
+// Hero list
+message UserHeroListProto {
+  map<int64, HeroProto> heroes = 1; // All heroes
+}
+
+// Hero
+message HeroProto {
+  int64 id = 1; // Hero ID
+  uint64 data_id = 2; // Hero DataID
+  uint64 level = 3; // Hero level
+}

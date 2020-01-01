@@ -1,0 +1,11 @@
+# ignore all files in this directory
+*
+
+# cancel ignore .proto file
+!.gitignore
+!*.proto
+!*.md
+!LICENSE
+
+# cancel ignore directory (so that .proto files in subdirectories are included)
+!*/

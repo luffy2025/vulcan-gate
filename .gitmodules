@@ -1,0 +1,12 @@
+[submodule "api/client"]
+	path = api/client
+	url = https://github.com/vulcan-frame/vulcan-api-client
+[submodule "api/server"]
+	path = api/server
+	url = https://github.com/vulcan-frame/vulcan-api-server
+[submodule "pkg/tool/vulcan-pkg-tool"]
+	path = pkg/tool/vulcan-pkg-tool
+	url = https://github.com/vulcan-frame/vulcan-pkg-tool
+[submodule "pkg/app/vulcan-pkg-app"]
+	path = pkg/app/vulcan-pkg-app
+	url = https://github.com/vulcan-frame/vulcan-pkg-app

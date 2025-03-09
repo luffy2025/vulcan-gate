@@ -36,10 +36,9 @@ Thumbs.db
 app/*/configs
 
 # submodules
-./api/client/
-./api/server/
-./pkg/tool/vulcan-pkg-tool/
-./pkg/app/vulcan-pkg-app/
+./api/
+./pkg/tool/
+./pkg/app/
 
 # generated files
 bin/

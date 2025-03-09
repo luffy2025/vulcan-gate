@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	serviceName = "rec.player.service"
+	serviceName = "vulcan.player.service"
 )
 
 type Conn struct {

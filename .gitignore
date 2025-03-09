@@ -36,9 +36,9 @@ Thumbs.db
 app/*/configs
 
 # submodules
-./api/
-./pkg/tool/
-./pkg/app/
+/api/**
+/pkg/tool/**
+/pkg/app/**
 
 # generated files
 bin/

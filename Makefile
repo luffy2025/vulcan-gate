@@ -26,6 +26,17 @@ version:
 wire:
 	@find app -type d -depth 1 -print | xargs -L 1 bash -c 'echo "wire: $$0" && cd "$$0" && $(MAKE) wire'
 
+.PHONY: proto
+# Generate internal proto struct
+proto:
+	buf generate
+
+.PHONY: api
+# Generate API
+api:
+	buf generate --template=buf.gen.client.yaml
+	buf generate --template=buf.gen.server.yaml
+
 .PHONY: build
 # Build executable file
 build:

@@ -1,0 +1,7 @@
+go 1.23.0
+
+use (
+	.
+    ./pkg/tool/vulcan-pkg-tool
+    ./pkg/app/vulcan-pkg-app
+)
